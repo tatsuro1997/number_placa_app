@@ -1,0 +1,14 @@
+.w-full.max-w-2xl.mx-auto.mt-12.text-center.text-gray-800
+  h1.text-5xl.font-bold.mb-4
+    | ナンプレに挑戦！
+  p.text-lg.text-gray-600.mb-10
+    | 数字を配置して、すべての行、列、3x3のブロックに1から9までの数字が1つずつ入るようにするパズルです。
+
+  .bg-white.p-8.rounded-xl.shadow-lg
+    h2.text-2xl.font-semibold.mb-6
+      | 難易度を選択してください
+
+    .flex.justify-center.space-x-4
+      = link_to "かんたん", puzzle_path(1), class: "px-8 py-3 bg-green-500 text-white font-bold rounded-lg shadow-md hover:bg-green-600 transition-transform transform hover:scale-105"
+      = link_to "ふつう", puzzle_path(2), class: "px-8 py-3 bg-blue-500 text-white font-bold rounded-lg shadow-md hover:bg-blue-600 transition-transform transform hover:scale-105"
+      = link_to "むずかしい", puzzle_path(3), class: "px-8 py-3 bg-red-500 text-white font-bold rounded-lg shadow-md hover:bg-red-600 transition-transform transform hover:scale-105"
