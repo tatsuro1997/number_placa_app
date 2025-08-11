@@ -15,6 +15,7 @@
             div class=cell_classes data-row=r_idx data-col=c_idx data-action='click->board#selectCell'
               = value == '0' ? '' : value
 
-      .mt-6.flex.space-x-4
-        / = button_to '新しい問題', play_path(difficulty: @puzzle.difficulty), method: :get, class: 'px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300'
-        / = link_to '難易度選択に戻る', root_path, class: 'px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition duration-300'
+  .mt-6.flex.justify-around.space-x-4
+    = link_to '難易度選択に戻る', root_path, class: 'px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition duration-300'
+    / TODO: 次の問題がないときはリンクをなくす
+    = button_to '次の問題', puzzle_path(@puzzle.id + 1), method: :get, class: 'px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300'
