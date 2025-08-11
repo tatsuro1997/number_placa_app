@@ -1,0 +1,20 @@
+.w-full.max-w-lg.mx-auto.mt-8.font-sans.text-gray-800 data-controller='board'
+  h1.text-3xl.font-bold.text-center.mb-4
+    =  "ナンプレ # #{ @puzzle.id }"
+
+  turbo-frame#number_place_board
+    .flex.flex-col.items-center
+      / 9x9 Grid Board
+      .grid.grid-cols-9.bg-gray-300.border-4.border-gray-700.rounded-lg.shadow-lg style='width: 450px; height: 450px;'
+        - @puzzle.cells.each_with_index do |row, r_idx|
+          - row.each_with_index do |value, c_idx|
+            - cell_classes = 'flex items-center justify-center text-2xl font-bold bg-white border border-gray-300'
+            - cell_classes += ' border-t-2 border-t-gray-700' if r_idx % 3 == 0 && r_idx.nonzero?
+            - cell_classes += ' border-l-2 border-l-gray-700' if c_idx % 3 == 0 && c_idx.nonzero?
+
+            div class=cell_classes data-row=r_idx data-col=c_idx data-action='click->board#selectCell'
+              = value == '0' ? '' : value
+
+      .mt-6.flex.space-x-4
+        / = button_to '新しい問題', play_path(difficulty: @puzzle.difficulty), method: :get, class: 'px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300'
+        / = link_to '難易度選択に戻る', root_path, class: 'px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition duration-300'
