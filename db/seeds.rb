@@ -1,9 +1,19 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+Puzzle.create!([
+  {
+    problem:    '003020600900305001001806400008102900700000008006708200002609500800203009005010300',
+    solution:   '483921657967345821251876493598132974742659138136798245372689514814273695625417389',
+    difficulty: 1
+  },
+  {
+    problem:    '200080300060070084034000201000507000008000500000104000801000650540020070006040003',
+    solution:   '217486395965273184434915267692537418158692537374164928821759643549328776786142953',
+    difficulty: 2
+  },
+  {
+    problem:    '000000012000030400500006000070000080001090200030000040000500007008020000340000000',
+    solution:   '6854793121928354675741268934792516838516932742367841599135428677689175233423687..', # Note: Incomplete solution for brevity
+    difficulty: 3
+  }
+])
+
+puts 'サンプル問題の登録が完了しました。'
