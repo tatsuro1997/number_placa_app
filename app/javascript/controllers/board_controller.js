@@ -12,6 +12,7 @@ export default class extends Controller {
     if (this.selectedCell) {
       this.selectedCell.classList.remove("bg-yellow-200");
     }
+
     this.selectedCell = cell;
     this.selectedCell.classList.add("bg-yellow-200");
   }
@@ -22,13 +23,9 @@ export default class extends Controller {
       return;
     }
 
-    const value = event.currentTarget.dataset.value;
-    const row = this.selectedCell.dataset.row;
-    const col = this.selectedCell.dataset.col;
-
-    this.rowInputTarget.value = row;
-    this.colInputTarget.value = col;
-    this.valueInputTarget.value = value;
+    this.rowInputTarget.value = this.selectedCell.dataset.row;
+    this.colInputTarget.value = this.selectedCell.dataset.col;
+    this.valueInputTarget.value = event.currentTarget.dataset.value;
 
     this.formTarget.requestSubmit();
   }
