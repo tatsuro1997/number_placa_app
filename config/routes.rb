@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
   root "welcome#index"
-  resources :puzzles, only: %i[show]
+  resources :puzzles, only: %i[show update]
 end

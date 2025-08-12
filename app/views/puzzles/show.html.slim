@@ -3,17 +3,29 @@
     =  "ナンプレ # #{ @puzzle.id }"
 
   turbo-frame#number_place_board
-    .flex.flex-col.items-center
-      / 9x9 Grid Board
-      .grid.grid-cols-9.bg-gray-300.border-4.border-gray-700.rounded-lg.shadow-lg style='width: 450px; height: 450px;'
-        - @puzzle.cells.each_with_index do |row, r_idx|
-          - row.each_with_index do |value, c_idx|
-            - cell_classes = 'flex items-center justify-center text-2xl font-bold bg-white border border-gray-300'
-            - cell_classes += ' border-t-2 border-t-gray-700' if r_idx % 3 == 0 && r_idx.nonzero?
-            - cell_classes += ' border-l-2 border-l-gray-700' if c_idx % 3 == 0 && c_idx.nonzero?
+    = form_with(url: puzzle_path(@puzzle), method: :patch, data: { board_target: 'form' }) do |f|
+      = f.hidden_field :row, data: { board_target: 'rowInput' }
+      = f.hidden_field :col, data: { board_target: 'colInput' }
+      = f.hidden_field :value, data: { board_target: 'valueInput' }
 
-            div class=cell_classes data-row=r_idx data-col=c_idx data-action='click->board#selectCell'
-              = value == '0' ? '' : value
+      .flex.flex-col.items-center
+        / 9x9 Grid Board
+        .grid.grid-cols-9.bg-gray-300.border-4.border-gray-700.rounded-lg.shadow-lg style='width: 450px; height: 450px;'
+          - @puzzle.cells.each_with_index do |row, r_idx|
+            - row.each_with_index do |value, c_idx|
+              - cell_classes = 'flex items-center justify-center text-2xl font-bold bg-white border border-gray-300'
+              - cell_classes += ' border-t-2 border-t-gray-700' if r_idx % 3 == 0 && r_idx.nonzero?
+              - cell_classes += ' border-l-2 border-l-gray-700' if c_idx % 3 == 0 && c_idx.nonzero?
+
+              div id="cell_#{r_idx}_#{c_idx}" class=cell_classes data-row=r_idx data-col=c_idx data-action='click->board#selectCell'
+                = value == '0' ? '' : value
+
+        .grid.grid-cols-5.gap-2.mt-6
+          - (1..9).each do |num|
+            button type="button" class="w-16 h-16 bg-white border-2 border-gray-400 rounded-lg text-2xl font-bold hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-blue-500" data-action="click->board#enterNumber" data-value=num
+              = num
+          button type="button" class="w-16 h-16 bg-white border-2 border-gray-400 rounded-lg text-xl font-bold hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500" data-action="click->board#enterNumber" data-value="0"
+            | 消す
 
   .mt-6.flex.justify-around.space-x-4
     = link_to '難易度選択に戻る', root_path, class: 'px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition duration-300'
