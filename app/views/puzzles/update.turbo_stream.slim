@@ -1,2 +1,5 @@
 = turbo_stream.update "cell_#{@row}_#{@col}" do
   = @value == '0' ? '' : @value
+
+  javascript:
+    window.dispatchEvent(new CustomEvent('numberPlaca:cellUpdated'));

@@ -5,6 +5,13 @@ export default class extends Controller {
 
   connect() {
     this.selectedCell = null;
+
+    this.boundCellUpdateHandler = this.handleCellUpdate.bind(this);
+    window.addEventListener('numberPlaca:cellUpdated', this.boundCellUpdateHandler);
+  }
+
+  disconnect() {
+    window.removeEventListener('numberPlaca:cellUpdated', this.boundCellUpdateHandler);
   }
 
   selectCell(event) {
@@ -28,5 +35,16 @@ export default class extends Controller {
     this.valueInputTarget.value = event.currentTarget.dataset.value;
 
     this.formTarget.requestSubmit();
+  }
+
+  handleCellUpdate() {
+    this.clearSelection();
+  }
+
+  clearSelection() {
+    if (this.selectedCell) {
+      this.selectedCell.classList.remove("bg-yellow-200");
+      this.selectedCell = null;
+    }
   }
 }
