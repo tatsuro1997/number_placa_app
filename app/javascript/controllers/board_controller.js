@@ -18,12 +18,22 @@ export default class extends Controller {
 
   selectCell(event) {
     const cell = event.currentTarget;
+    if (this.isInitialValue(cell)) {
+      this.playErrorSound();
+
+      return;
+    }
+
     if (this.selectedCell) {
       this.removeSelectedClass(this.selectedCell);
     }
 
     this.selectedCell = cell;
     this.addSelectedClass(this.selectedCell);
+  }
+
+  isInitialValue(cell) {
+    return cell.dataset.initial === 'false';
   }
 
   enterNumber(event) {
@@ -166,5 +176,21 @@ export default class extends Controller {
     if (this.hasNormalClass) {
       element.classList.remove(this.normalClass);
     }
+  }
+
+  playErrorSound() {
+    // Web Audio API または単純なbeep音
+    const audioContext = new (window.AudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.value = 200; // エラー音: 低めの周波数
+    gainNode.gain.value = 0.1;
+    
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + 0.1);
   }
 }
