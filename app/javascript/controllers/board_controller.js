@@ -1,23 +1,35 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["form", "rowInput", "colInput", "valueInput"]
-  static classes = ["selected", "error", "normal"]
+  static targets = ["form", "rowInput", "colInput", "valueInput", "numberModal"]
+  static classes = ["selected", "error", "normal", "modal"]
 
   connect() {
     this.selectedCell = null;
     this.lastUpdatedCell = null;
+    this.modalActive = false;
 
     this.afterCellUpdateHandler = this.afterCellUpdate.bind(this);
     window.addEventListener('numberPlaca:cellUpdated', this.afterCellUpdateHandler);
+
+    // モーダル外クリックで閉じる
+    this.boundCloseModal = this.closeModalOnOutsideClick.bind(this);
+    document.addEventListener('click', this.boundCloseModal);
+
+    // キーボードショートカット
+    this.boundHandleKeydown = this.handleKeydown.bind(this);
+    document.addEventListener('keydown', this.boundHandleKeydown);
   }
 
   disconnect() {
     window.removeEventListener('numberPlaca:cellUpdated', this.afterCellUpdateHandler);
+    document.removeEventListener('click', this.boundCloseModal);
+    document.removeEventListener('keydown', this.boundHandleKeydown);
   }
 
   selectCell(event) {
     const cell = event.currentTarget;
+
     if (this.isInitialValue(cell)) {
       this.playErrorSound();
 
@@ -30,11 +42,63 @@ export default class extends Controller {
 
     this.selectedCell = cell;
     this.addSelectedClass(this.selectedCell);
+
+    this.showModal(cell);
   }
 
   isInitialValue(cell) {
-    console.log("isInitialValue called", cell.dataset.initial);
     return cell.dataset.initial === 'true';
+  }
+
+  showModal(cell) {
+    const modal = this.numberModalTarget;
+    const rect = cell.getBoundingClientRect();
+
+    let modalLeft = rect.left - 150;
+    let modalTop = rect.top - 50;
+
+    // 画面左端からはみ出る場合は右側に表示
+    if (modalLeft < 0) {
+      modalLeft = rect.right + 10;
+    }
+
+    modal.style.left = `${modalLeft}px`;
+    modal.style.top = `${modalTop}px`;
+
+    this.removeModalClass(modal);
+    
+    this.modalActive = true;
+  }
+
+  closeModal() {
+    if (!this.modalActive) return;
+
+    const modal = this.numberModalTarget;
+
+    this.addModalClass(modal);
+    this.clearSelection();
+
+    this.modalActive = false;
+  }
+
+  closeModalOnOutsideClick(event) {
+    if (!this.modalActive) return;
+
+    // モーダル内のクリックは無視
+    if (this.numberModalTarget.contains(event.target)) return;
+    
+    // 選択されたセル自体のクリックは無視（selectCellで処理）
+    if (this.selectedCell && this.selectedCell.contains(event.target)) return;
+
+    this.closeModal();
+  }
+
+  selectNumber(event) {
+    if (!this.selectedCell) return;
+
+    const value = event.currentTarget.dataset.value;
+    this.processNumberInput(value);
+    this.closeModal();
   }
 
   enterNumber(event) {
@@ -43,9 +107,15 @@ export default class extends Controller {
       return;
     }
 
+    const value = event.currentTarget.dataset.value;
+    this.processNumberInput(value);
+  }
+
+  processNumberInput(value) {
+    if (!this.selectedCell) return;
+
     const row = this.selectedCell.dataset.row;
     const col = this.selectedCell.dataset.col;
-    const value = event.currentTarget.dataset.value;
 
     this.lastUpdatedCell = {
       row: parseInt(row),
@@ -58,6 +128,28 @@ export default class extends Controller {
     this.valueInputTarget.value = value;
 
     this.formTarget.requestSubmit();
+  }
+
+  handleKeydown(event) {
+    if (!this.selectedCell || !this.modalActive) return;
+
+    // 数字キー (1-9)
+    if (event.key >= '1' && event.key <= '9') {
+      event.preventDefault();
+      this.processNumberInput(event.key);
+      this.closeModal();
+    }
+    // Deleteキー、Backspaceキー
+    else if (event.key === 'Delete' || event.key === 'Backspace') {
+      event.preventDefault();
+      this.processNumberInput('0');
+      this.closeModal();
+    }
+    // Escapeキー
+    else if (event.key === 'Escape') {
+      event.preventDefault();
+      this.closeModal();
+    }
   }
 
   afterCellUpdate() {
@@ -176,6 +268,18 @@ export default class extends Controller {
   removeNormalClass(element) {
     if (this.hasNormalClass) {
       element.classList.remove(this.normalClass);
+    }
+  }
+
+  addModalClass(element) {
+    if (this.hasModalClass) {
+      element.classList.add(this.modalClass);
+    }
+  }
+
+  removeModalClass(element) {
+    if (this.hasModalClass) {
+      element.classList.remove(this.modalClass);
     }
   }
 

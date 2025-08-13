@@ -1,6 +1,15 @@
-.w-full.max-w-lg.mx-auto.mt-8.font-sans.text-gray-800 data-controller='board' data-board-selected-class='bg-yellow-200' data-board-error-class='bg-red-200' data-board-normal-class='bg-white'
+.w-full.max-w-lg.mx-auto.mt-8.font-sans.text-gray-800 data-controller='board' data-board-selected-class='bg-yellow-200' data-board-error-class='bg-red-200' data-board-normal-class='bg-white' data-board-modal-class='hidden'
   h1.text-3xl.font-bold.text-center.mb-4
     =  "ナンプレ # #{ @puzzle.id }"
+
+  / 数字選択モーダル（初期状態は非表示）
+  .fixed.z-50.bg-white.border-2.border-gray-300.rounded-lg.shadow-xl.p-2.hidden data-board-target="numberModal"
+    .grid.grid-cols-3.gap-1 class='w-[120px]'
+      - (1..9).each do |num|
+        button.w-8.h-8.bg-white.border.border-gray-300.rounded.text-sm.font-bold.hover:bg-blue-100.focus:outline-none.focus:ring-2.focus:ring-blue-400.transition-all.duration-150.hover:scale-110 type='button' data-action='click->board#selectNumber' data-value=num
+          = num
+      button.col-span-3.w-full.h-6.bg-red-50.border.border-red-300.rounded.text-xs.font-bold.hover:bg-red-100.focus:outline-none.focus:ring-2.focus:ring-red-400.transition-all.duration-150 type='button' data-action='click->board#selectNumber' data-value='0'
+        | 消す
 
   turbo-frame#number_place_board
     = form_with(url: puzzle_path(@puzzle), method: :patch, data: { board_target: 'form' }) do |f|
@@ -19,9 +28,9 @@
 
         .grid.grid-cols-5.gap-2.mt-6
           - (1..9).each do |num|
-            button type="button" class="w-16 h-16 bg-white border-2 border-gray-400 rounded-lg text-2xl font-bold hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-blue-500" data-action="click->board#enterNumber" data-value=num
+            button type='button' class='w-16 h-16 bg-white border-2 border-gray-400 rounded-lg text-2xl font-bold hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-blue-500' data-action='click->board#enterNumber' data-value=num
               = num
-          button type="button" class="w-16 h-16 bg-white border-2 border-gray-400 rounded-lg text-xl font-bold hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500" data-action="click->board#enterNumber" data-value="0"
+          button type='button' class='w-16 h-16 bg-white border-2 border-gray-400 rounded-lg text-xl font-bold hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500' data-action='click->board#enterNumber' data-value='0'
             | 消す
 
   .mt-6.flex.justify-around.space-x-4
