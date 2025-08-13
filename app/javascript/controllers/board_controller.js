@@ -33,7 +33,8 @@ export default class extends Controller {
   }
 
   isInitialValue(cell) {
-    return cell.dataset.initial === 'false';
+    console.log("isInitialValue called", cell.dataset.initial);
+    return cell.dataset.initial === 'true';
   }
 
   enterNumber(event) {

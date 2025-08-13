@@ -13,15 +13,8 @@
         .grid.grid-cols-9.bg-gray-300.border-4.border-gray-700.rounded-lg.shadow-lg style='width: 450px; height: 450px;'
           - @puzzle.cells.each_with_index do |row, r_idx|
             - row.each_with_index do |value, c_idx|
-              - cell_classes = 'flex items-center justify-center text-2xl bg-white border border-gray-300'
-              - cell_classes += ' border-t-2 border-t-gray-700' if r_idx % 3 == 0 && r_idx.nonzero?
-              - cell_classes += ' border-l-2 border-l-gray-700' if c_idx % 3 == 0 && c_idx.nonzero?
-
-              - is_initial_value = value.to_i.zero?
-              - cell_classes += ' font-bold cursor-pointer' if is_initial_value
-              - cell_classes += ' text-gray-800 font-black' unless is_initial_value
-
-              div id="cell_#{r_idx}_#{c_idx}" class=cell_classes data-row=r_idx data-col=c_idx data-action='click->board#selectCell' data-initial=is_initial_value.to_s
+              - is_initial_value = !value.to_i.zero?
+              div id="cell_#{r_idx}_#{c_idx}" class=cell_classes(r_idx, c_idx, is_initial_value) data-row=r_idx data-col=c_idx data-action='click->board#selectCell' data-initial=is_initial_value.to_s
                 = value == '0' ? '' : value
 
         .grid.grid-cols-5.gap-2.mt-6
