@@ -1,13 +1,14 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["form", "rowInput", "colInput", "valueInput", "numberModal"]
+  static targets = ["form", "rowInput", "colInput", "valueInput", "numberModal", "timer"]
   static classes = ["selected", "error", "normal", "modal"]
 
   connect() {
     this.selectedCell = null;
     this.lastUpdatedCell = null;
     this.modalActive = false;
+    this.firstMove = true;
 
     this.afterCellUpdateHandler = this.afterCellUpdate.bind(this);
     window.addEventListener('numberPlaca:cellUpdated', this.afterCellUpdateHandler);
@@ -113,6 +114,11 @@ export default class extends Controller {
 
   processNumberInput(value) {
     if (!this.selectedCell) return;
+
+    if (this.firstMove) {
+      this.startTimerIfExists();
+      this.firstMove = false;
+    }
 
     const row = this.selectedCell.dataset.row;
     const col = this.selectedCell.dataset.col;
@@ -297,5 +303,10 @@ export default class extends Controller {
     
     oscillator.start();
     oscillator.stop(audioContext.currentTime + 0.1);
+  }
+
+  startTimerIfExists() {
+    const timerController = this.application.getControllerForElementAndIdentifier(this.timerTarget, "timer")
+    timerController?.start();
   }
 }
