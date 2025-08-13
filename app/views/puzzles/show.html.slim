@@ -1,6 +1,18 @@
-.w-full.max-w-lg.mx-auto.mt-8.font-sans.text-gray-800 data-controller='board' data-board-selected-class='bg-yellow-200' data-board-error-class='bg-red-200' data-board-normal-class='bg-white' data-board-modal-class='hidden'
-  h1.text-3xl.font-bold.text-center.mb-4
-    =  "ナンプレ # #{ @puzzle.id }"
+.w-full.max-w-lg.mx-auto.mt-8.font-sans.text-gray-800 data-controller='board timer' data-board-selected-class='bg-yellow-200' data-board-error-class='bg-red-200' data-board-normal-class='bg-white' data-board-modal-class='hidden'  data-timer-visible-class='inline-block' data-timer-hidden-class='hidden'
+  .flex.items-center.justify-around.mb-4
+    h1.text-3xl.font-bold.text-center
+      =  "ナンプレ # #{ @puzzle.id }"
+    / タイマーエリア
+    .flex.flex-col.items-center
+      .text-xl.font-mono.font-bold.text-blue-600 data-timer-target='display'
+        | 00:00
+      .flex.space-x-2
+        button.px-2.py-1.bg-green-500.text-white.rounded.text-xs.font-semibold.hover:bg-green-600.transition type='button' data-action='click->timer#start' data-timer-target='startBtn'
+          | スタート
+        button.px-2.py-1.bg-yellow-500.text-white.rounded.text-xs.font-semibold.hover:bg-yellow-600.transition type='button' data-action='click->timer#pause' data-timer-target='pauseBtn'
+          | 一時停止
+        button.px-2.py-1.bg-red-500.text-white.rounded.text-xs.font-semibold.hover:bg-red-600.transition type='button' data-action='click->timer#reset' data-timer-target='resetBtn'
+          | リセット
 
   / 数字選択モーダル（初期状態は非表示）
   .fixed.z-50.bg-white.border-2.border-gray-300.rounded-lg.shadow-xl.p-2.hidden data-board-target="numberModal"
