@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["form", "rowInput", "colInput", "valueInput"]
+  static classes = ["selected", "error", "normal"]
 
   connect() {
     this.selectedCell = null;
@@ -18,11 +19,11 @@ export default class extends Controller {
   selectCell(event) {
     const cell = event.currentTarget;
     if (this.selectedCell) {
-      this.selectedCell.classList.remove("bg-yellow-200");
+      this.removeSelectedClass(this.selectedCell);
     }
 
     this.selectedCell = cell;
-    this.selectedCell.classList.add("bg-yellow-200");
+    this.addSelectedClass(this.selectedCell);
   }
 
   enterNumber(event) {
@@ -58,7 +59,7 @@ export default class extends Controller {
 
   clearSelection() {
     if (this.selectedCell) {
-      this.selectedCell.classList.remove("bg-yellow-200");
+      this.removeSelectedClass(this.selectedCell);
       this.selectedCell = null;
     }
   }
@@ -67,14 +68,16 @@ export default class extends Controller {
     this.clearErrors();
 
     const duplicates = new Set();
+    const targetCellId = `cell_${targetRow}_${targetCol}`;
 
     // 1. 同じ行をチェック
     for (let c = 0; c < 9; c++) {
       if (c !== targetCol) {
-        const cell = document.getElementById(`cell_${targetRow}_${c}`);
+        const targetRowCellId = `cell_${targetRow}_${c}`;
+        const cell = document.getElementById(targetRowCellId);
         if (cell.textContent.trim() === targetValue) {
-          duplicates.add(`cell_${targetRow}_${c}`);
-          duplicates.add(`cell_${targetRow}_${targetCol}`); // 元のセルも追加
+          duplicates.add(targetRowCellId);
+          duplicates.add(targetCellId); // 元のセルも追加
         }
       }
     }
@@ -82,10 +85,11 @@ export default class extends Controller {
     // 2. 同じ列をチェック
     for (let r = 0; r < 9; r++) {
       if (r !== targetRow) {
-        const cell = document.getElementById(`cell_${r}_${targetCol}`);
+        const targetColCellId = `cell_${r}_${targetCol}`;
+        const cell = document.getElementById(targetColCellId);
         if (cell.textContent.trim() === targetValue) {
-          duplicates.add(`cell_${r}_${targetCol}`);
-          duplicates.add(`cell_${targetRow}_${targetCol}`); // 元のセルも追加
+          duplicates.add(targetColCellId);
+          duplicates.add(targetCellId); // 元のセルも追加
         }
       }
     }
@@ -97,10 +101,11 @@ export default class extends Controller {
     for (let r = blockRow; r < blockRow + 3; r++) {
       for (let c = blockCol; c < blockCol + 3; c++) {
         if (r !== targetRow || c !== targetCol) {
-          const cell = document.getElementById(`cell_${r}_${c}`);
+          const targetBlockCellId = `cell_${r}_${c}`;
+          const cell = document.getElementById(targetBlockCellId);
           if (cell.textContent.trim() === targetValue) {
-            duplicates.add(`cell_${r}_${c}`);
-            duplicates.add(`cell_${targetRow}_${targetCol}`); // 元のセルも追加
+            duplicates.add(targetBlockCellId);
+            duplicates.add(targetCellId); // 元のセルも追加
           }
         }
       }
@@ -110,17 +115,56 @@ export default class extends Controller {
     duplicates.forEach(cellId => {
       const cell = document.getElementById(cellId);
       if (cell) {
-        cell.classList.remove("bg-white");
-        cell.classList.add("bg-red-200", "border-red-400");
+        this.removeNormalClass(cell);
+        this.addErrorClass(cell);
       }
     });
   }
 
   clearErrors() {
-    const errorCells = document.querySelectorAll('.bg-red-200, .border-red-400');
+    const errorCells = document.querySelectorAll(`.${this.errorClass}`);
     errorCells.forEach(cell => {
-      cell.classList.remove("bg-red-200", "border-red-400");
-      cell.classList.add("bg-white");
+      this.removeErrorClass(cell);
+      this.addNormalClass(cell);
     });
+  }
+
+  // CSS Classes Helper Methods
+  addSelectedClass(element) {
+    if (this.hasSelectedClass) {
+      element.classList.add(this.selectedClass);
+    }
+  }
+
+  removeSelectedClass(element) {
+    if (this.hasSelectedClass) {
+      element.classList.remove(this.selectedClass);
+    }
+  }
+
+  addErrorClass(element) {
+    if (this.hasErrorClass) {
+      this.removeNormalClass(element);
+      element.classList.add(this.errorClass);
+    }
+  }
+
+  removeErrorClass(element) {
+    if (this.hasErrorClass) {
+      element.classList.remove(this.errorClass);
+      this.addNormalClass(element);
+    }
+  }
+
+  addNormalClass(element) {
+    if (this.hasNormalClass) {
+      element.classList.add(this.normalClass);
+    }
+  }
+
+  removeNormalClass(element) {
+    if (this.hasNormalClass) {
+      element.classList.remove(this.normalClass);
+    }
   }
 }
