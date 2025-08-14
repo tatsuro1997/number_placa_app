@@ -67,7 +67,7 @@ export default class extends Controller {
     modal.style.top = `${modalTop}px`;
 
     this.removeModalClass(modal);
-    
+
     this.modalActive = true;
   }
 
@@ -87,7 +87,7 @@ export default class extends Controller {
 
     // モーダル内のクリックは無視
     if (this.numberModalTarget.contains(event.target)) return;
-    
+
     // 選択されたセル自体のクリックは無視（selectCellで処理）
     if (this.selectedCell && this.selectedCell.contains(event.target)) return;
 
@@ -184,7 +184,7 @@ export default class extends Controller {
       if (c !== targetCol) {
         const targetRowCellId = `cell_${targetRow}_${c}`;
         const cell = document.getElementById(targetRowCellId);
-        if (cell.textContent.trim() === targetValue) {
+        if (cell.innerText.trim() === targetValue) {
           duplicates.add(targetRowCellId);
           duplicates.add(targetCellId); // 元のセルも追加
         }
@@ -196,7 +196,7 @@ export default class extends Controller {
       if (r !== targetRow) {
         const targetColCellId = `cell_${r}_${targetCol}`;
         const cell = document.getElementById(targetColCellId);
-        if (cell.textContent.trim() === targetValue) {
+        if (cell.innerText.trim() === targetValue) {
           duplicates.add(targetColCellId);
           duplicates.add(targetCellId); // 元のセルも追加
         }
@@ -206,13 +206,13 @@ export default class extends Controller {
     // 3. 同じ3x3ブロックをチェック
     const blockRow = Math.floor(targetRow / 3) * 3;
     const blockCol = Math.floor(targetCol / 3) * 3;
-    
+
     for (let r = blockRow; r < blockRow + 3; r++) {
       for (let c = blockCol; c < blockCol + 3; c++) {
         if (r !== targetRow || c !== targetCol) {
           const targetBlockCellId = `cell_${r}_${c}`;
           const cell = document.getElementById(targetBlockCellId);
-          if (cell.textContent.trim() === targetValue) {
+          if (cell.innerText.trim() === targetValue) {
             duplicates.add(targetBlockCellId);
             duplicates.add(targetCellId); // 元のセルも追加
           }
@@ -294,13 +294,13 @@ export default class extends Controller {
     const audioContext = new (window.AudioContext)();
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
-    
+
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
-    
+
     oscillator.frequency.value = 200; // エラー音: 低めの周波数
     gainNode.gain.value = 0.1;
-    
+
     oscillator.start();
     oscillator.stop(audioContext.currentTime + 0.1);
   }
