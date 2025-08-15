@@ -1,4 +1,5 @@
-.w-full.max-w-lg.mx-auto.mt-8.font-sans.text-gray-800 [
+.max-w-lg.mx-auto.mt-8.font-sans.text-gray-800 [
+  class='w-[450px]'
   data-controller='board timer'
   data-board-selected-class='bg-yellow-200'
   data-board-error-class='bg-red-200'
@@ -13,7 +14,10 @@
       =  "ナンプレ # #{ @puzzle.id }"
     / タイマーエリア
     .flex.flex-col.items-center
-      .text-xl.font-mono.font-bold.text-blue-600 data-timer-target='display'
+      .text-xl.font-mono.font-bold.text-blue-600[
+        data-timer-target='display'
+        data-board-target='time'
+      ]
         | 00:00
       .flex.space-x-2
         button.px-2.py-1.bg-green-500.text-white.rounded.text-xs.font-semibold.hover:bg-green-600.transition[
@@ -34,6 +38,18 @@
           data-timer-target='resetBtn'
         ]
           | リセット
+
+  - if @completion_info
+    .mb-4.p-4.bg-green-50.border.border-green-200.rounded-lg.text-center
+      .text-green-800.font-bold.text-lg 🎉 このパズルは完成済みです！ 🎉
+      .flex.justify-around.items-center.mt-2
+        div
+          .text-sm.text-green-600.mt-1
+            = "完成日時: #{@completion_info[:completed_at].strftime('%Y/%m/%d %H:%M')}"
+          .text-sm.text-green-600
+            = "完成時間: #{@completion_info[:completion_time]}"
+        .mt-2
+          = link_to '次の問題に挑戦', puzzle_path(@puzzle.id + 1), class: 'px-2 py-2 text-xs bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300'
 
   / 数字選択モーダル（初期状態は非表示）
   .fixed.z-50.bg-white.border-2.border-gray-300.rounded-lg.shadow-xl.p-2.hidden data-board-target="numberModal"
@@ -57,6 +73,7 @@
       = f.hidden_field :row, data: { board_target: 'rowInput' }
       = f.hidden_field :col, data: { board_target: 'colInput' }
       = f.hidden_field :value, data: { board_target: 'valueInput' }
+      = f.hidden_field :time, data: { board_target: 'timeInput' }
 
       .flex.flex-col.items-center
         / 9x9 Grid Board

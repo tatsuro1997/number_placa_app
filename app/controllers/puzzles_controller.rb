@@ -1,6 +1,9 @@
 class PuzzlesController < ApplicationController
+  before_action :set_puzzle, only: %i[show update]
+  before_action :initialize_puzzle_state_service, only: %i[show update]
+
   def show
-    @puzzle = Puzzle.find(params[:id])
+    @completion_info = @puzzle_state_service.completion_info(@puzzle.id)
   end
 
   def update
@@ -8,11 +11,27 @@ class PuzzlesController < ApplicationController
     @col = params[:col]
     @value = params[:value]
 
-    # TODO: 値を保存するロジック追加
-    # 中間テーブルに保存するなど
+    @puzzle_state_service.save_input(@puzzle, @row, @col, @value)
+
+    user_inputs = @puzzle_state_service.user_inputs(@puzzle.id)
+    if user_inputs.any? { _1.exclude?("0") }
+      return unless @puzzle.completed_with_inputs?(user_inputs)
+
+      @puzzle_state_service.mark_completed(@puzzle.id, params[:time])
+    end
 
     respond_to do |format|
       format.turbo_stream
     end
+  end
+
+  private
+
+  def set_puzzle
+    @puzzle = Puzzle.find(params[:id])
+  end
+
+  def initialize_puzzle_state_service
+    @puzzle_state_service = PuzzleStateService.new(cookies)
   end
 end

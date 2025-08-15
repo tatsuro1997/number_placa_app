@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["form", "rowInput", "colInput", "valueInput", "numberModal", "timer"]
+  static targets = ["form", "rowInput", "colInput", "valueInput", "timeInput", "numberModal", "timer", "time"]
   static classes = ["selected", "error", "normal", "modal"]
 
   connect() {
@@ -132,6 +132,7 @@ export default class extends Controller {
     this.rowInputTarget.value = row;
     this.colInputTarget.value = col;
     this.valueInputTarget.value = value;
+    this.timeInputTarget.value = this.timeTarget.textContent;
 
     this.formTarget.requestSubmit();
   }

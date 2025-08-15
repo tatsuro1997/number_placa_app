@@ -76,7 +76,7 @@ export default class extends Controller {
   updateDisplay() {
     const minutes = Math.floor(this.totalSeconds / 60);
     const seconds = this.totalSeconds % 60;
-    
+
     const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     this.displayTarget.textContent = formattedTime;
   }
@@ -95,7 +95,7 @@ export default class extends Controller {
     this.pause();
     this.totalSeconds = seconds;
     this.updateDisplay();
-    
+
     if (wasRunning) {
       this.start();
     }
