@@ -24,6 +24,30 @@
 
   <body>
     <main class="container mx-auto mt-28 px-5 flex">
+      <% if flash.any? %>
+        <div class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md">
+          <% flash.each do |type, message| %>
+            <div
+              class="<%= flash_class(type) %> px-4 py-3 rounded-lg shadow-lg mb-2 flex items-center justify-between"
+              data-controller="flash"
+              data-flash-delay-value="2000"
+              data-flash-fade-duration-value="500"
+            >
+              <div class="flex items-center">
+                <span class="text-lg mr-2"><%= flash_icon(type) %></span>
+                <span class="font-medium"><%= message %></span>
+              </div>
+              <button
+                type="button"
+                class="ml-4 text-xl leading-none hover:opacity-70"
+                data-action="click->flash#close"
+              >
+                &times;
+              </button>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
       <%= yield %>
     </main>
   </body>
