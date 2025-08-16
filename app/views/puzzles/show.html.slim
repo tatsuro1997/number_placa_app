@@ -20,24 +20,28 @@
       ]
         | 00:00
       .flex.space-x-2
-        button.px-2.py-1.bg-green-500.text-white.rounded.text-xs.font-semibold.hover:bg-green-600.transition[
+        button.px-2.py-1.bg-green-500.text-white.rounded.text-xs.font-semibold.cursor-pointer.hover:bg-green-600.transition[
           type='button'
           data-action='click->timer#start'
           data-timer-target='startBtn'
         ]
           | スタート
-        button.px-2.py-1.bg-yellow-500.text-white.rounded.text-xs.font-semibold.hover:bg-yellow-600.transition [
+        button.px-2.py-1.bg-yellow-500.text-white.rounded.text-xs.font-semibold.cursor-pointer.hover:bg-yellow-600.transition [
           type='button'
           data-action='click->timer#pause'
           data-timer-target='pauseBtn'
         ]
           | 一時停止
-        button.px-2.py-1.bg-red-500.text-white.rounded.text-xs.font-semibold.hover:bg-red-600.transition [
+        button.px-2.py-1.bg-red-500.text-white.rounded.text-xs.font-semibold.cursor-pointer.hover:bg-red-600.transition [
           type='button'
           data-action='click->timer#reset'
           data-timer-target='resetBtn'
         ]
           | リセット
+
+  .flex.justify-center.mb-4
+      = form_with url: reset_puzzle_path(@puzzle), method: :post, local: true, data: { turbo_confirm: 'パズルをリセットしますか？\n\n入力したすべての数字が削除され、タイマーもリセットされます。\nこの操作は取り消せません。' } do |f|
+        = f.submit '🔄 リセット', class: 'px-2 py-1 bg-gray-400 text-white rounded font-semibold text-xs shadow-md cursor-pointer hover:bg-gray-500'
 
   - if @completion_info
     .mb-4.p-4.bg-green-50.border.border-green-200.rounded-lg.text-center
@@ -102,4 +106,4 @@
   .mt-6.flex.justify-around.space-x-4
     = link_to '難易度選択に戻る', root_path, class: 'px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition duration-300'
     / TODO: 次の問題がないときはリンクをなくす
-    = button_to '次の問題', puzzle_path(@puzzle.id + 1), method: :get, class: 'px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300'
+    = button_to '次の問題', puzzle_path(@puzzle.id + 1), method: :get, class: 'px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md cursor-pointer hover:bg-blue-700 transition duration-300'

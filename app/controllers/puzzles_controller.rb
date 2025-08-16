@@ -1,6 +1,6 @@
 class PuzzlesController < ApplicationController
-  before_action :set_puzzle, only: %i[show update]
-  before_action :initialize_puzzle_state_service, only: %i[show update]
+  before_action :set_puzzle, only: %i[show update reset]
+  before_action :initialize_puzzle_state_service, only: %i[show update reset]
 
   def show
     @completion_info = @puzzle_state_service.completion_info(@puzzle.id)
@@ -23,6 +23,11 @@ class PuzzlesController < ApplicationController
     respond_to do |format|
       format.turbo_stream
     end
+  end
+
+  def reset
+    @puzzle_state_service.reset_state(@puzzle.id)
+    redirect_to puzzle_path(@puzzle), notice: "パズルをリセットしました"
   end
 
   private

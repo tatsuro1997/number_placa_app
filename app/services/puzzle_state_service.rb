@@ -43,6 +43,10 @@ class PuzzleStateService
     }
   end
 
+  def reset_state(puzzle_id)
+    @cookies.delete("puzzle_#{puzzle_id}")
+  end
+
   private
 
   def save_state(puzzle_id, state)
