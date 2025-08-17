@@ -30,7 +30,7 @@ class PuzzleStateService
 
   def user_inputs(puzzle_id)
     state = get_state(puzzle_id)
-    state["user_inputs"] || {}
+    state["user_inputs"]
   end
 
   def completion_info(puzzle_id)
