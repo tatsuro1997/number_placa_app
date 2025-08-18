@@ -84,9 +84,17 @@
         .grid.grid-cols-9.bg-gray-300.border-4.border-gray-700.rounded-lg.shadow-lg class="w-[450px] h-[450px]"
           - @user_inputs_array.each_with_index do |row, r_idx|
             - row.each_with_index do |value, c_idx|
-              - is_initial_value = !value.to_i.zero?
-              div id="cell_#{r_idx}_#{c_idx}" class=cell_classes(r_idx, c_idx, is_initial_value) data-row=r_idx data-col=c_idx data-action='click->board#selectCell' data-initial=is_initial_value.to_s
-                = value == '0' ? '' : value
+              - is_initial_value = @puzzle.cells[r_idx][c_idx].to_i.zero?
+              - has_user_input = !value.to_i.zero?
+              div [
+                id="cell_#{r_idx}_#{c_idx}"
+                class=cell_classes(r_idx, c_idx, is_initial_value, has_user_input)
+                data-row=r_idx
+                data-col=c_idx
+                data-action='click->board#selectCell'
+                data-initial=is_initial_value.to_s
+              ]
+                = value.to_i.zero? ? '' : value
 
         .grid.grid-cols-5.gap-2.mt-6
           - (1..9).each do |num|

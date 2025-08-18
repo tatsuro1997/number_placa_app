@@ -31,7 +31,7 @@ export default class extends Controller {
   selectCell(event) {
     const cell = event.currentTarget;
 
-    if (this.isInitialValue(cell)) {
+    if (!this.isInitialValue(cell)) {
       this.playErrorSound();
 
       return;
