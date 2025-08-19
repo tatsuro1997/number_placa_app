@@ -38,11 +38,11 @@ export default class extends Controller {
     }
 
     if (this.selectedCell) {
-      this.removeSelectedClass(this.selectedCell);
+      this.toggleSelectedClass(this.selectedCell);
     }
 
     this.selectedCell = cell;
-    this.addSelectedClass(this.selectedCell);
+    this.toggleSelectedClass(this.selectedCell);
 
     this.showModal(cell);
   }
@@ -66,7 +66,7 @@ export default class extends Controller {
     modal.style.left = `${modalLeft}px`;
     modal.style.top = `${modalTop}px`;
 
-    this.removeModalClass(modal);
+    this.toggleModalClass(modal);
 
     this.modalActive = true;
   }
@@ -76,7 +76,7 @@ export default class extends Controller {
 
     const modal = this.numberModalTarget;
 
-    this.addModalClass(modal);
+    this.toggleModalClass(modal);
     this.clearSelection();
 
     this.modalActive = false;
@@ -169,7 +169,7 @@ export default class extends Controller {
 
   clearSelection() {
     if (this.selectedCell) {
-      this.removeSelectedClass(this.selectedCell);
+      this.toggleSelectedClass(this.selectedCell);
       this.selectedCell = null;
     }
   }
@@ -240,54 +240,28 @@ export default class extends Controller {
   }
 
   // CSS Classes Helper Methods
-  addSelectedClass(element) {
-    if (this.hasSelectedClass) {
-      element.classList.add(this.selectedClass);
-    }
+  toggleSelectedClass(element) {
+    element.classList.toggle(this.selectedClass);
   }
 
-  removeSelectedClass(element) {
-    if (this.hasSelectedClass) {
-      element.classList.remove(this.selectedClass);
-    }
+  toggleModalClass(element) {
+    element.classList.toggle(this.modalClass);
   }
 
   addErrorClass(element) {
-    if (this.hasErrorClass) {
-      this.removeNormalClass(element);
-      element.classList.add(this.errorClass);
-    }
+    element.classList.add(this.errorClass);
   }
 
   removeErrorClass(element) {
-    if (this.hasErrorClass) {
-      element.classList.remove(this.errorClass);
-      this.addNormalClass(element);
-    }
+    element.classList.remove(this.errorClass);
   }
 
   addNormalClass(element) {
-    if (this.hasNormalClass) {
-      element.classList.add(this.normalClass);
-    }
+    element.classList.add(this.normalClass);
   }
 
   removeNormalClass(element) {
-    if (this.hasNormalClass) {
-      element.classList.remove(this.normalClass);
-    }
-  }
-
-  addModalClass(element) {
-    if (this.hasModalClass) {
-      element.classList.add(this.modalClass);
-    }
-  }
-
-  removeModalClass(element) {
-    if (this.hasModalClass) {
-      element.classList.remove(this.modalClass);
-    }
+    element.classList.remove(this.normalClass);
   }
 
   playErrorSound() {
