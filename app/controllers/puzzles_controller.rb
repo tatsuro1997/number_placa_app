@@ -3,7 +3,7 @@ class PuzzlesController < ApplicationController
   before_action :initialize_puzzle_state_service, only: %i[show update reset]
 
   def show
-    @user_inputs_array = @puzzle_state_service.user_inputs(@puzzle.id) || @puzzle.cells
+    @user_inputs_array = @puzzle_state_service.user_inputs(@puzzle.id) || @puzzle.problem_cells
     @completion_info = @puzzle_state_service.completion_info(@puzzle.id)
   end
 

@@ -84,7 +84,7 @@
         .grid.grid-cols-9.bg-gray-300.border-4.border-gray-700.rounded-lg.shadow-lg class="w-[450px] h-[450px]"
           - @user_inputs_array.each_with_index do |row, r_idx|
             - row.each_with_index do |value, c_idx|
-              - is_initial_value = @puzzle.cells[r_idx][c_idx].to_i.zero?
+              - is_initial_value = @puzzle.problem_cells[r_idx][c_idx].to_i.zero?
               - has_user_input = !value.to_i.zero?
               div [
                 id="cell_#{r_idx}_#{c_idx}"

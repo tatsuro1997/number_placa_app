@@ -13,7 +13,7 @@ class PuzzleStateService
 
   def save_input(puzzle, row, col, value)
     state = get_state(puzzle.id)
-    state["user_inputs"] ||= puzzle.cells
+    state["user_inputs"] ||= puzzle.problem_cells
     state["user_inputs"][row.to_i][col.to_i] = value
 
     state["last_played"] = Time.current.to_i
