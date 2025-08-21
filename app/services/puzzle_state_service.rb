@@ -16,14 +16,14 @@ class PuzzleStateService
     state["user_inputs"] ||= puzzle.problem_cells
     state["user_inputs"][row.to_i][col.to_i] = value
 
-    state["last_played"] = Time.current.to_i
+    state["last_played"] = Time.zone.now.to_i
     save_state(puzzle.id, state)
   end
 
   def mark_completed(puzzle_id, completion_time)
     state = get_state(puzzle_id)
     state["completed"] = true
-    state["completed_at"] = Time.current.to_i
+    state["completed_at"] = Time.zone.now.to_i
     state["completion_time_seconds"] = completion_time
     save_state(puzzle_id, state)
   end
