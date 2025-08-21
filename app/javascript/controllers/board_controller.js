@@ -10,8 +10,8 @@ export default class extends Controller {
     this.modalActive = false;
     this.firstMove = true;
 
-    this.afterCellUpdateHandler = this.afterCellUpdate.bind(this);
-    window.addEventListener('numberPlaca:cellUpdated', this.afterCellUpdateHandler);
+    this.afterCellUpdatedHandler = this.afterCellUpdated.bind(this);
+    window.addEventListener('numberPlaca:cellUpdated', this.afterCellUpdatedHandler);
 
     this.afterCellCompletedHandler = this.afterCellCompleted.bind(this);
     window.addEventListener('numberPlaca:cellCompleted', this.afterCellCompletedHandler);
@@ -26,7 +26,7 @@ export default class extends Controller {
   }
 
   disconnect() {
-    window.removeEventListener('numberPlaca:cellUpdated', this.afterCellUpdateHandler);
+    window.removeEventListener('numberPlaca:cellUpdated', this.afterCellUpdatedHandler);
     document.removeEventListener('click', this.boundCloseModal);
     document.removeEventListener('keydown', this.boundHandleKeydown);
   }
@@ -162,7 +162,7 @@ export default class extends Controller {
     }
   }
 
-  afterCellUpdate() {
+  afterCellUpdated() {
     this.clearSelection();
 
     if (this.lastUpdatedCell) {
