@@ -16,9 +16,9 @@ class PuzzlesController < ApplicationController
 
     user_inputs = @puzzle_state_service.user_inputs(@puzzle.id)
     if user_inputs.any? { _1.exclude?("0") }
-      return unless @puzzle.completed_with_inputs?(user_inputs)
+      @is_completed = @puzzle.completed_with_inputs?(user_inputs)
 
-      @puzzle_state_service.mark_completed(@puzzle.id, params[:time])
+      @puzzle_state_service.mark_completed(@puzzle.id, params[:time]) if @is_completed
     end
 
     respond_to do |format|

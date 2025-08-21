@@ -13,6 +13,9 @@ export default class extends Controller {
     this.afterCellUpdateHandler = this.afterCellUpdate.bind(this);
     window.addEventListener('numberPlaca:cellUpdated', this.afterCellUpdateHandler);
 
+    this.afterCellCompletedHandler = this.afterCellCompleted.bind(this);
+    window.addEventListener('numberPlaca:cellCompleted', this.afterCellCompletedHandler);
+
     // モーダル外クリックで閉じる
     this.boundCloseModal = this.closeModalOnOutsideClick.bind(this);
     document.addEventListener('click', this.boundCloseModal);
@@ -165,6 +168,11 @@ export default class extends Controller {
     if (this.lastUpdatedCell) {
       this.checkDuplicatesForCell(this.lastUpdatedCell.row, this.lastUpdatedCell.col, this.lastUpdatedCell.value);
     }
+  }
+
+  afterCellCompleted() {
+    const timerController = this.application.getControllerForElementAndIdentifier(this.timerTarget, "timer")
+    timerController?.pause();
   }
 
   clearSelection() {

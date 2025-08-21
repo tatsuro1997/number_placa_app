@@ -43,17 +43,18 @@
       = form_with url: reset_puzzle_path(@puzzle), method: :post, local: true, data: { turbo_confirm: 'パズルをリセットしますか？\n\n入力したすべての数字が削除され、タイマーもリセットされます。\nこの操作は取り消せません。' } do |f|
         = f.submit '🔄 リセット', class: 'px-2 py-1 bg-gray-400 text-white rounded font-semibold text-xs shadow-md cursor-pointer hover:bg-gray-500'
 
-  - if @completion_info
-    .mb-4.p-4.bg-green-50.border.border-green-200.rounded-lg.text-center
-      .text-green-800.font-bold.text-lg 🎉 このパズルは完成済みです！ 🎉
-      .flex.justify-around.items-center.mt-2
-        div
-          .text-sm.text-green-600.mt-1
-            = "完成日時: #{@completion_info[:completed_at].strftime('%Y/%m/%d %H:%M')}"
-          .text-sm.text-green-600
-            = "完成時間: #{@completion_info[:completion_time]}"
-        .mt-2
-          = link_to '次の問題に挑戦', puzzle_path(@puzzle.id + 1), class: 'px-2 py-2 text-xs bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300'
+  #completion_status
+    - if @completion_info
+      .mb-4.p-4.bg-green-50.border.border-green-200.rounded-lg.text-center
+        .text-green-800.font-bold.text-lg 🎉 このパズルは完成済みです！ 🎉
+        .flex.justify-around.items-center.mt-2
+          div
+            .text-sm.text-green-600.mt-1
+              = "完成日時: #{@completion_info[:completed_at].strftime('%Y/%m/%d %H:%M')}"
+            .text-sm.text-green-600
+              = "完成時間: #{@completion_info[:completion_time]}"
+          .mt-2
+            = link_to '次の問題に挑戦', puzzle_path(@puzzle.id + 1), class: 'px-2 py-2 text-xs bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300'
 
   / 数字選択モーダル（初期状態は非表示）
   .fixed.z-50.bg-white.border-2.border-gray-300.rounded-lg.shadow-xl.p-2.hidden data-board-target="numberModal"
